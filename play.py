@@ -7,38 +7,53 @@ from stable_baselines3 import DQN
 from stable_baselines3.common.atari_wrappers import AtariWrapper
 from stable_baselines3.common.vec_env import VecFrameStack, DummyVecEnv
 
-ENV_ID = "ALE/BankHeist-v5"
-NUM_EPISODES = 5
-RENDER_DELAY = 0.02
-DEFAULT_MODEL_PATH = "models/rele/exp10_best_combo/best_model.zip"
 
-# Selects the best action based on learned Q-values
+# Game we trained on
+ENV_ID = "ALE/BankHeist-v5"
+
+# How many episodes we want to watch
+NUM_EPISODES = 5
+
+# Small delay so the gameplay is visible
+RENDER_DELAY = 0.02
+
+# Shared best model after comparing everyone's experiments
+DEFAULT_MODEL_PATH = "models/best_model.zip"
+
+
+# During evaluation we act greedily (no randomness)
 def greedy_action(model, obs):
     action, _ = model.predict(obs, deterministic=True)
     return action
 
-# Creates environment with same structure used during training
+
+# Create environment similar to training setup
 def make_vec_play_env():
     def _init():
         env = gym.make(ENV_ID, render_mode="human")
         env = AtariWrapper(env)
         return env
+
     env = DummyVecEnv([_init])
     env = VecFrameStack(env, n_stack=4)
     return env
 
-# Runs evaluation loop over multiple episodes
-def play(model_path):
-    print("BankHeist-v5 DQN Evaluation")
-    print(f"Loading model: {model_path}")
 
+def play(model_path):
+    print("\nBankHeist-v5 Evaluation")
+    print("Group: Fidel, Limpho, Rele")
+    print(f"Using model: {model_path}\n")
+
+    # Load trained model
     model = DQN.load(model_path)
-    print("Model loaded")
+    print("Model loaded successfully.\n")
 
     env = make_vec_play_env()
+
     episode_rewards = []
     episode_lengths = []
 
+    # Run multiple episodes
     for episode in range(1, NUM_EPISODES + 1):
         obs = env.reset()
         done = False
@@ -49,31 +64,38 @@ def play(model_path):
 
         while not done:
             action = greedy_action(model, obs)
+
             obs, reward, done, info = env.step(action)
+
             total_reward += reward[0]
             steps += 1
+
             time.sleep(RENDER_DELAY)
 
         episode_rewards.append(total_reward)
         episode_lengths.append(steps)
-        print(f"Reward: {total_reward:.1f}, Steps: {steps}")
 
-    # Displays summary statistics after evaluation
+        print(f"Reward: {total_reward:.1f} | Steps: {steps}\n")
+
+    # Final summary
     print("Summary")
-    print(f"Episodes: {NUM_EPISODES}")
-    print(f"Mean reward: {np.mean(episode_rewards):.2f}")
-    print(f"Max reward: {np.max(episode_rewards):.2f}")
-    print(f"Min reward: {np.min(episode_rewards):.2f}")
-    print(f"Std reward: {np.std(episode_rewards):.2f}")
-    print(f"Mean episode length: {np.mean(episode_lengths):.1f}")
+    print(f"Episodes played: {NUM_EPISODES}")
+    print(f"Average reward: {np.mean(episode_rewards):.2f}")
+    print(f"Best reward: {np.max(episode_rewards):.2f}")
+    print(f"Worst reward: {np.min(episode_rewards):.2f}")
+    print(f"Reward std: {np.std(episode_rewards):.2f}")
+    print(f"Average episode length: {np.mean(episode_lengths):.1f}\n")
 
     env.close()
 
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Play BankHeist-v5 with a trained DQN model")
+    parser = argparse.ArgumentParser(description="Play BankHeist with a trained DQN model")
+
     parser.add_argument("--model", type=str, default=DEFAULT_MODEL_PATH)
     parser.add_argument("--episodes", type=int, default=NUM_EPISODES)
     parser.add_argument("--delay", type=float, default=RENDER_DELAY)
+
     args = parser.parse_args()
 
     NUM_EPISODES = args.episodes
