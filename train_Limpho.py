@@ -131,7 +131,7 @@ EXPERIMENTS = [
 
 ACTIVE_EXPERIMENT = 0
 RUN_ALL = True
-TOTAL_TIMESTEPS = 500_000
+TOTAL_TIMESTEPS = 200_000
 
 
 # Creates environment instance depending on policy type
