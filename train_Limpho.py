@@ -130,7 +130,7 @@ EXPERIMENTS = [
 ]
 
 ACTIVE_EXPERIMENT = 0
-RUN_ALL = True
+RUN_ALL = False
 TOTAL_TIMESTEPS = 200_000
 
 
@@ -213,4 +213,5 @@ if __name__ == "__main__":
         for cfg in EXPERIMENTS:
             run_experiment(cfg)
     else:
-        run_experiment(EXPERIMENTS[ACTIVE_EXPERIMENT])
+        for cfg in EXPERIMENTS[8:10]:
+            run_experiment(cfg)
