@@ -51,6 +51,11 @@ Formative-3_DQN-Atari-Agent/
 │── results/              # Outputs & graphs
 │── requirements.txt
 │── README.md
+│──train_Fidel.py
+│──train_Limpho.py
+│──train_Rele.py
+
+
 
 ````
 
