@@ -1,5 +1,6 @@
 #  DQN Atari Agent
-https://youtu.be/edyTBbGMEag
+ video game :
+ https://youtu.be/edyTBbGMEag
 
 ##  Project Overview
 This project implements a **Deep Q-Network (DQN)** agent to play Atari games using **Deep Reinforcement Learning**. The agent learns optimal actions by interacting with the environment and improving its performance over time through reward-based learning.
