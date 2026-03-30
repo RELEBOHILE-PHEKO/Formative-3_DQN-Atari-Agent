@@ -154,7 +154,7 @@ Logs are saved under `logs/limpho/` and `logs/rele/` respectively. Models are sa
 
 ---
 
-### Rele Experiments
+### Relebohile Experiments
 
 | Experiment | Policy | Learning Rate | Gamma | Batch Size | Exploration Initial | Exploration Final | Buffer Size | Notes |
 |---|---|---|---|---|---|---|---|---|
